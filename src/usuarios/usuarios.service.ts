@@ -10,28 +10,27 @@ export class UsuariosService {
     private usuariosRepository: Repository<Usuario>,
   ) {}
 
-  // Função para criar um novo usuário (cadastro)
-  async create(data: Partial<Usuario>): Promise<Usuario> {
-    const { usuario_email } = data;
-    if (!usuario_email) {
-      throw new BadRequestException('O e-mail do usuário é obrigatório.');
-    }
-    const usuarioExistente = await this.findOneByEmail(usuario_email);
+  async create(data: any): Promise<Usuario> {
+    // Mapeando do front-end para a entidade
+    const dadosParaSalvar = {
+        usuario_nome: data.usuario,
+        usuario_email: data.email,
+        usuario_senha: data.senha,
+        usuario_dataDeNascimento: data.dataNascimento,
+    };
+
+    const usuarioExistente = await this.findOneByEmail(dadosParaSalvar.usuario_email);
 
     if (usuarioExistente) {
       throw new BadRequestException('Este e-mail já está em uso.');
     }
 
-    // NOTA: Em um projeto real, a senha seria criptografada aqui antes de salvar!
-    // Ex: data.senha = await bcrypt.hash(data.senha, 10);
-
-    const novoUsuario = this.usuariosRepository.create(data);
+    const novoUsuario = this.usuariosRepository.create(dadosParaSalvar);
     return this.usuariosRepository.save(novoUsuario);
   }
 
-  // Função para encontrar um usuário pelo e-mail (usado no login)
   async findOneByEmail(email: string): Promise<Usuario | undefined> {
     const usuario = await this.usuariosRepository.findOne({ where: { usuario_email: email } });
-    return usuario ?? undefined;
+    return usuario === null ? undefined : usuario;
   }
 }

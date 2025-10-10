@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { Usuario } from './usuarios/entities/usuario.entity';
@@ -8,17 +8,22 @@ import { Usuario } from './usuarios/entities/usuario.entity';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env', // Especifica explicitamente o arquivo .env
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      // CORREÇÃO APLICADA AQUI: O padrão agora é 3306
-      port: parseInt(process.env.DB_PORT || '3306', 10),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
-      entities: [Usuario],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule], // Importa o ConfigModule para dentro do TypeOrmModule
+      inject: [ConfigService], // Injeta o serviço de configuração
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_DATABASE'),
+        entities: [Usuario],
+        synchronize: false, // Mantém a sincronização para desenvolvimento
+        logging: true, // Adiciona logs para ver as queries do TypeORM no console
+      }),
     }),
     UsuariosModule,
   ],

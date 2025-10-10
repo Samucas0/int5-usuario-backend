@@ -1,26 +1,20 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'usuario' }) // Nome da tabela
 export class Usuario {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'usuario_id' })
   usuario_id: number;
 
-  @Column()
+  @Column({ name: 'usuario_nome' })
   usuario_nome: string;
 
-  @Column({ unique: true }) // O e-mail deve ser único
+  @Column({ name: 'usuario_email', unique: true })
   usuario_email: string;
 
-  @Column()
+  @Column({ name: 'usuario_senha' })
   usuario_senha: string;
 
-  @Column()
-  usuario_dataDeNascimento: Date;
+  @Column({ name: 'usuario_dataDeNascimento' })
+  usuario_dataDeNascimento: Date; 
 
-  // Campos do perfil que podemos adicionar agora
-  @Column({ nullable: true }) // nullable: true significa que o campo não é obrigatório
-  telefone: string;
-
-  @Column({ nullable: true })
-  endereco: string;
 }
