@@ -1,23 +1,26 @@
 import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
 import { BibliotecariosService } from './bibliotecarios.service';
 import { LoginBibliotecarioDto } from './dto/login-bibliotecario.dto';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-@Controller('admin') // Rota continua /admin
+@ApiTags('admin')
+@Controller('admin')
 export class BibliotecariosController {
   constructor(private readonly bibliotecariosService: BibliotecariosService) {}
 
-  @Post('login') // Rota final: POST /admin/login
+  @Post('login')
+  @ApiOperation({ summary: 'Realiza o login de um bibliotecário' })
+  @ApiResponse({ status: 200, description: 'Login bem-sucedido.' })
+  @ApiResponse({ status: 401, description: 'Número de identificação inválido.' })
   async login(@Body() loginDto: LoginBibliotecarioDto) {
     const bibliotecario = await this.bibliotecariosService.findByNumero(
       loginDto.bibliotecario_numero,
     );
 
     if (!bibliotecario) {
-      // Se não encontrou, o número é inválido
       throw new HttpException('Número de identificação inválido', HttpStatus.UNAUTHORIZED);
     }
 
-    // Se encontrou, o login é bem-sucedido
     return {
       message: 'Login de administrador bem-sucedido!',
       admin: bibliotecario,

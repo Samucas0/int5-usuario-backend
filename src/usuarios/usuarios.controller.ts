@@ -2,12 +2,17 @@ import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/commo
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { LoginUsuarioDto } from './dto/login-usuario.dto';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('usuarios')
 @Controller('usuarios')
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post('cadastro')
+  @ApiOperation({ summary: 'Cadastra um novo usuário' })
+  @ApiResponse({ status: 201, description: 'Usuário cadastrado com sucesso.' })
+  @ApiResponse({ status: 400, description: 'Dados inválidos.' })
   async cadastrar(@Body() createUsuarioDto: CreateUsuarioDto) {
     try {
       const usuario = await this.usuariosService.create(createUsuarioDto);
@@ -19,6 +24,9 @@ export class UsuariosController {
   }
 
   @Post('login')
+  @ApiOperation({ summary: 'Realiza o login de um usuário' })
+  @ApiResponse({ status: 200, description: 'Login bem-sucedido.' })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas.' })
   async login(@Body() loginUsuarioDto: LoginUsuarioDto) {
     const usuario = await this.usuariosService.validateUser(
       loginUsuarioDto.usuario_email,
