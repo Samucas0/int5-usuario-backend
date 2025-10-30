@@ -24,7 +24,7 @@ export class BibliotecariosController {
 
     if (!bibliotecario) {
       throw new HttpException(
-        'Login ou senha inválido', // Mensagem genérica
+        'Login ou senha inválido',
         HttpStatus.UNAUTHORIZED,
       );
     }
