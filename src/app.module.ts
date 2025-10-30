@@ -3,8 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { Usuario } from './usuarios/entities/usuario.entity';
-import { BibliotecariosModule } from './bibliotecarios/bibliotecarios.module'; // 1. IMPORTE AQUI
-import { Bibliotecario } from './bibliotecarios/entities/bibliotecario.entity'; // 2. IMPORTE AQUI
+import { BibliotecariosModule } from './bibliotecarios/bibliotecarios.module';
+import { Bibliotecario } from './bibliotecarios/entities/bibliotecario.entity'; 
 
 @Module({
   imports: [
@@ -22,13 +22,14 @@ import { Bibliotecario } from './bibliotecarios/entities/bibliotecario.entity'; 
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [Usuario, Bibliotecario], // 3. ADICIONE A ENTIDADE AQUI
+        entities: [Usuario, Bibliotecario], 
+        autoLoadEntities: true,
         synchronize: false,
         logging: true,
       }),
     }),
     UsuariosModule,
-    BibliotecariosModule, // 4. ADICIONE O MÓDULO AQUI
+    BibliotecariosModule, 
   ],
   controllers: [],
   providers: [],

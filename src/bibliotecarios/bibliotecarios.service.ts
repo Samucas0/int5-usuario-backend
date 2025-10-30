@@ -1,3 +1,5 @@
+// src/bibliotecarios/bibliotecarios.service.ts
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,10 +13,22 @@ export class BibliotecariosService {
   ) {}
 
   /**
-   * Encontra um bibliotecário pelo seu número de identificação.
-   * Retorna o bibliotecário se encontrado, ou null se não existir.
+   * Valida o login de um bibliotecário pelo login e senha.
+   * Retorna o bibliotecário se bater, ou null se não.
    */
-  async findByNumero(numero: string): Promise<Bibliotecario | null> {
-    return this.bibliotecariosRepository.findOne({ where: { numero } });
+  async validateLogin(
+    loginFornecido: string,
+    senhaFornecida: string,
+  ): Promise<Bibliotecario | null> {
+    
+    // Procura no banco onde 'login' E 'senha' batem
+    const bibliotecario = await this.bibliotecariosRepository.findOne({
+      where: {
+        login: loginFornecido, // Usando a propriedade 'login' da entidade
+        senha: senhaFornecida, // Usando a propriedade 'senha' da entidade
+      },
+    });
+
+    return bibliotecario;
   }
 }

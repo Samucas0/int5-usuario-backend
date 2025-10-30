@@ -1,9 +1,16 @@
+// src/bibliotecarios/dto/login-bibliotecario.dto.ts
+
 import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginBibliotecarioDto {
-  @ApiProperty({ example: '123456789' })
+  @ApiProperty({ example: 'admin_biblio' }) // Trocado
   @IsString()
-  @IsNotEmpty({ message: 'O número de identificação é obrigatório.' })
-  bibliotecario_numero: string;
+  @IsNotEmpty({ message: 'O login é obrigatório.' })
+  login: string; // Trocado de 'bibliotecario_numero' para 'login'
+
+  @ApiProperty({ example: 'senhaForte123' }) // Adicionado
+  @IsString()
+  @IsNotEmpty({ message: 'A senha é obrigatória.' })
+  senha: string; // Adicionado
 }

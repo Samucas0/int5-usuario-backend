@@ -5,6 +5,12 @@ export class Bibliotecario {
   @PrimaryGeneratedColumn({ name: 'bibliotecario_id' })
   id: number;
 
-  @Column({ name: 'bibliotecario_numero', unique: true })
-  numero: string;
+  @Column({ name: 'bibliotecario_nome' })
+  nome: string; 
+
+  @Column({ name: 'bibliotecario_login', unique: true })
+  login: string;
+
+  @Column({ name: 'bibliotecario_senha' }) 
+  senha: string; 
 }
